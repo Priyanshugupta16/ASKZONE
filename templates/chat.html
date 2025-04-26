@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Chat | AskZone</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #00c9ff, #92fe9d);
+      color: white;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .chat-container {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+      width: 95%;
+      max-width: 800px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background-color: #ff4081;
+      padding: 15px 20px;
+      font-size: 20px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 10px 15px;
+      border-radius: 15px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .sent {
+      align-self: flex-end;
+      background-color: #00e5ff;
+      color: black;
+    }
+
+    .received {
+      align-self: flex-start;
+      background-color: #ffffff30;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 15px;
+      background-color: #00000030;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 12px 15px;
+      border-radius: 25px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .chat-input button {
+      margin-left: 10px;
+      padding: 10px 20px;
+      background-color: #ff4081;
+      border: none;
+      border-radius: 25px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .chat-input button:hover {
+      background-color: #f50057;
+    }
+
+    .username {
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 3px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">💬 Student Chatroom</div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input">
+      <input type="text" id="messageInput" placeholder="Type your message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const socket = io();
+    const username = "{{ session['user']['name'] }}";
+
+    function sendMessage() {
+      const input = document.getElementById("messageInput");
+      const messageText = input.value.trim();
+
+      if (messageText !== "") {
+        socket.send({ user: username, message: messageText });
+        input.value = "";
+        input.focus();
+      }
+    }
+
+    socket.on("message", (data) => {
+      const messageElem = document.createElement("div");
+      messageElem.classList.add("message");
+
+      const usernameElem = document.createElement("span");
+      usernameElem.classList.add("username");
+      usernameElem.textContent = data.user;
+
+      messageElem.appendChild(usernameElem);
+      messageElem.appendChild(document.createTextNode(data.message));
+
+      messageElem.classList.add(data.user === username ? "sent" : "received");
+
+      const chatBox = document.getElementById("chatMessages");
+      chatBox.appendChild(messageElem);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+
+    document.getElementById("messageInput").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
+</body>
+</html>

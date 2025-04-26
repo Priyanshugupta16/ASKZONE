@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profile | AskZone</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: linear-gradient(135deg, #00c9ff, #92fe9d);
+      --bg-dark: #1c1c1c;
+      --card: rgba(0, 0, 0, 0.4);
+      --card-dark: #2c2c2c;
+      --text: #fff;
+      --accent: #ff4081;
+      --yellow: #ffeb3b;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: 0.3s;
+    }
+
+    .profile-container {
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      position: relative;
+    }
+
+    .dark-mode {
+      background: var(--bg-dark);
+    }
+
+    .dark-mode .profile-container {
+      background: var(--card-dark);
+    }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #fff;
+      margin: 0 auto 20px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 28px;
+      color: var(--yellow);
+      margin-bottom: 10px;
+    }
+
+    .info-field {
+      margin-bottom: 20px;
+    }
+
+    .info-label {
+      font-weight: 600;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .info-value input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+      gap: 10px;
+    }
+
+    .stat-card {
+      flex: 1;
+      background-color: #00e5ff;
+      color: #000;
+      padding: 15px;
+      border-radius: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .btn {
+      margin-top: 20px;
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background-color: #f50057;
+    }
+
+    .dark-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+      font-size: 18px;
+      background: #fff;
+      color: #000;
+      border-radius: 50%;
+      padding: 6px 10px;
+    }
+
+    #avatarUpload {
+      display: none;
+    }
+
+    .upload-label {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+      color: #ccc;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .error {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+      color: #fa0404;
+      font-size: 14px;
+    }
+
+    .info-value select {
+      width: 106%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      outline: none;
+    }
+  </style>
+</head>
+<body id="body">
+  <form action="{{url_for('profile')}}", method="post", enctype="multipart/form-data">
+    <div class="profile-container">
+      <div class="dark-toggle" onclick="toggleDarkMode()">🌓</div>
+      <div style="display: flex; justify-content: center; gap: 20px; align-items: center; flex-wrap: wrap;">
+        <div class="profile-pic" id="avatar" onclick="document.getElementById('avatarUpload').click()" style="background-image: url('{{url_for('static', filename='uploads/avatar/' + details[3]) if details and details[3] and details[3] != 'None' else url_for('static', filename='graphics/default.png')}}');">
+        </div>
+
+      </div>
+      <label class="upload-label" for="avatarUpload">Click to change avatar</label>
+      <input type="file" id="avatarUpload" name="profilePic" accept="image/*">
+      {% if error%}
+      <p class="error">{{error}}</p>
+      {% endif %}
+
+      {% if details %}
+      <h2>Your Profile</h2>
+      <div class="info-field">
+        <label class="info-label">Name</label>
+        <div class="info-value"><input id="name" name="name" value="{{details[0]}}" required/></div>
+      </div>
+      <div class="info-field">
+        <label class="info-label">Email</label>
+        <div class="info-value"><input id="email" value="{{details[1]}}" disabled required readonly/></div>
+      </div>
+      <div class="info-field">
+        <label class="info-label">Branch</label>
+        <div class="info-value">
+          <select id="branch" name="branch" required>
+            <option value="{{details[2]}}" selected>{{details[2]}}</option>
+            <option value="Civil Engineering">Civil Engineering</option>
+            <option value="Computer Science & Engineering">
+              Computer Science & Engineering
+            </option>
+            <option value="Electrical & Electronics Engineering">
+              Electrical & Electronics Engineering
+            </option>
+            <option value="Electronics & Communication Engineering">
+              Electronics & Communication Engineering
+            </option>
+            <option value="Mechanical Engineering">Mechanical Engineering</option>
+            <option value="Information Technology">
+              Information Technology
+            </option>
+          </select>
+      </div>
+      {% endif %}
+
+      <!-- <div class="stats">
+        <div class="stat-card" id="noteCount">Notes: 0</div>
+        <div class="stat-card" id="chatCount">Chats: 0</div>
+      </div>
+     -->
+      <button class="btn" type="submit">Save Changes</button>
+    </div>
+  </form>
+
+  <script>
+    document.getElementById("avatarUpload").addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById("avatar").style.backgroundImage = "url('" + e.target.result + "')";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function toggleDarkMode() {
+      document.getElementById("body").classList.toggle("dark-mode");
+    }
+  </script>
+</body>
+</html>

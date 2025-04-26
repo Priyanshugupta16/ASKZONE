@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Registration - AskZone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #00c9ff, #92fe9d);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+
+    .registration-container {
+      background: rgba(0, 0, 0, 0.25);
+      padding: 50px;
+      border-radius: 25px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 36px;
+      color: #ffeb3b;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select,
+    input[type="number"] {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .specializations {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .specializations select {
+      margin-top: 10px;
+    }
+
+    .submit-btn {
+      margin-top: 20px;
+      background-color: #ff4081;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .submit-btn:hover {
+      background-color: #f50057;
+      transform: scale(1.05);
+    }
+
+    .link {
+      margin-top: 15px;
+      display: block;
+      color: #e0f7fa;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="registration-container">
+    <h1>Complete Your Registration</h1>
+    <form id="registration-form" method="post" action="{{ url_for('register') }}">
+      <input type="text" id="fullName" name="name" placeholder="Full Name" required /><br />
+      <input type="email" id="email" name="email" placeholder="Email" required /><br />
+
+      <select id="branch" name="branch" required>
+        <option value="" disabled selected>Select Branch</option>
+        <option value="Civil Engineering">Civil Engineering</option>
+        <option value="Computer Science & Engineering">
+          Computer Science & Engineering
+        </option>
+        <option value="Electrical & Electronics Engineering">
+          Electrical & Electronics Engineering
+        </option>
+        <option value="Electronics & Communication Engineering">
+          Electronics & Communication Engineering
+        </option>
+        <option value="Mechanical Engineering">Mechanical Engineering</option>
+        <option value="Information Technology">
+          Information Technology
+        </option>
+      </select><br />
+
+      <div class="specializations" id="cs-specializations">
+        <select id="specialization" name="specialization" required>
+          <option value="" disabled selected>Select Specialization</option>
+          <option value="AI/ML">AI/ML</option>
+          <option value="Data Science">Data Science</option>
+        </select><br />
+      </div>
+
+      <select id="semester" name="semester" required>
+        <option value="" disabled selected>Select Semester</option>
+        <option value="1">Semester 1</option>
+        <option value="2">Semester 2</option>
+        <option value="3">Semester 3</option>
+        <option value="4">Semester 4</option>
+        <option value="5">Semester 5</option>
+        <option value="6">Semester 6</option>
+        <option value="7">Semester 7</option>
+        <option value="8">Semester 8</option>
+      </select><br />
+
+      <input type="text" id="bestSubject" name="bestSubject" placeholder="Best Subject" required /><br />
+      <input type="number" id="cgpa" name="cgpa" placeholder="CGPA" step="0.01" required /><br />
+      <input type="password" id="password" name="password" placeholder="Password" required /><br />
+
+      <button class="submit-btn" id="submit-btn" type="submit">Complete Registration</button>
+    </form>
+    {% if error %}
+    <p class="link" style="color: red;">{{error}}</p>
+    {% endif %}
+    <a class="link" href="/login">Already have an account? Login</a>
+  </div>
+
+  <script>
+    // Handle branch selection and display specializations for Computer Science
+    const branchSelect = document.getElementById("branch");
+    const csSpecializations = document.getElementById("cs-specializations");
+
+    branchSelect.addEventListener("change", function () {
+      if (branchSelect.value === "Computer Science & Engineering") {
+        csSpecializations.style.display = "block";
+      } else {
+        csSpecializations.style.display = "none";
+      }
+    });
+
+
+    // Handle the registration form submission
+    const submitBtn = document.getElementById("submit-btn");
+
+    submitBtn.addEventListener("click", (e) => {
+      e.preventDefault(); // Stop auto submission
+      const fullName = document.getElementById("fullName").value;
+
+      alert(
+        "Registration successful! Welcome, " +
+        fullName +
+        ". You're now part of AskZone." +
+        " Before login verify your email first."
+      );
+
+      // Submit the form manually after alert
+      document.getElementById("registration-form").submit();
+    });
+  </script>
+</body>
+
+</html>

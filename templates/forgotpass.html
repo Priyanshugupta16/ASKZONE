@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Forgot Password - AskZone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #00c9ff, #92fe9d);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+
+    .forgot-password-container {
+      background: rgba(0, 0, 0, 0.25);
+      padding: 50px;
+      border-radius: 25px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 36px;
+      color: #ffeb3b;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .submit-btn {
+      margin-top: 20px;
+      background-color: #ff4081;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .submit-btn:hover {
+      background-color: #f50057;
+      transform: scale(1.05);
+    }
+
+    .link {
+      margin-top: 15px;
+      display: block;
+      color: #e0f7fa;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="forgot-password-container">
+    <h1>Forgot Password?</h1>
+    {% if error %}
+      <h4 style="color: red; text-align: center;">Error!</h4>
+    {% endif %}
+    {% if showResetForm %}
+    <form id="reset-password-form" method="post" action="{{url_for('resetpass', token=token)}}">
+      <input type="password" id="password" name="password" placeholder="Enter new password." required><br>
+      <button class="submit-btn" type="submit">Change Password</button>
+    </form>
+    {% else %}
+    <form id="forgot-password-form" method="post" action="{{url_for('forgotPass')}}">
+      <input type="email" id="email" name="email" placeholder="Enter your registered email" required><br>
+      <button class="submit-btn" type="submit">Send Reset Link</button>
+    </form>
+    <a class="link" href="/login">Back to Login</a>
+    {% endif %}
+  </div>
+
+  <script>
+    const forgotPasswordForm = document.getElementById("forgot-password-form");
+    if (forgotPasswordForm) {
+      forgotPasswordForm.addEventListener("submit", (e) => {
+        const email = document.getElementById("email").value;
+        alert("Password reset link has been sent to your email: " + email);
+      });
+    }
+  
+    const resetPasswordForm = document.getElementById("reset-password-form");
+    if (resetPasswordForm) {
+      resetPasswordForm.addEventListener("submit", (e) => {
+        alert("Password reset successfully.");
+      });
+    }
+  </script>  
+</body>
+</html>

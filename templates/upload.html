@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Notes | AskZone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #00c9ff, #92fe9d);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .upload-container {
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      border-radius: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+      width: 100%;
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ffeb3b;
+      margin-bottom: 30px;
+      font-size: 36px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+      margin-top: 20px;
+    }
+
+    input[type="text"],
+    select,
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      margin-top: 5px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 16px;
+    }
+
+    option {
+      color: #000;
+    }
+
+    input[type="file"]::file-selector-button {
+      padding: 10px 20px;
+      background-color: #ff4081;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    input[type="file"]::file-selector-button:hover {
+      background-color: #f50057;
+    }
+
+    textarea {
+      resize: vertical;
+      height: 100px;
+    }
+
+    button {
+      margin-top: 30px;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 30px;
+      background-color: #ff4081;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #f50057;
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="upload-container">
+    <h1>Upload Your Notes</h1>
+    {% if error %}
+    <h3 style="color: red; text-align: center;">{{error}}</h3>
+    {% endif %}
+    <form id="uploadForm" method="post" action="{{ url_for('notesUpload') }}" enctype="multipart/form-data">
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" placeholder="e.g., DBMS Notes - Unit 2" required>
+
+      <label for="subject">Subject</label>
+      <input type="text" id="subject" name="subject" placeholder="e.g., Database Management System" required>
+
+      <label for="category">Category</label>
+      <select id="category" name="category" required>
+        <option value="" disabled selected>Select Category</option>
+        <option value="Lecture Notes">Lecture Notes</option>
+        <option value="Lab Work">Lab Work</option>
+        <option value="Assignments">Assignments</option>
+        <option value="Books & PDFs">Books & PDFs</option>
+      </select>
+
+      <label for="description">Description</label>
+      <textarea id="description" name="description" placeholder="Brief overview of the notes..." required></textarea>
+
+      <label for="file">Upload File (PDF, DOCX)</label>
+      <input type="file" id="file" name="file" accept=".pdf,.docx,.pptx,.txt" required>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("uploadForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const title = document.getElementById("title").value;
+      const subject = document.getElementById("subject").value;
+      const category = document.getElementById("category").value;
+
+      if (!file) {
+        alert("Please upload a file!");
+        return;
+      }
+
+      alert(`📚 Notes Uploading!\n\nTitle: ${title}\nSubject: ${subject}\nCategory: ${category}`);
+
+      document.getElementById("uploadForm").submit();
+    });
+  </script>
+</body>
+</html>

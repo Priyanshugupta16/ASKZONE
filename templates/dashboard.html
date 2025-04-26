@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AskZone Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #00c9ff, #92fe9d);
+        color: #fff;
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+
+      .dashboard {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 48px;
+        color: #ffeb3b;
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-bottom: 50px;
+      }
+
+      .card {
+        background-color: rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-10px);
+      }
+
+      .card h2 {
+        font-size: 24px;
+        margin-bottom: 15px;
+        color: #ffffff;
+      }
+
+      .card p {
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #e0f7fa;
+      }
+
+      .card a {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #ff4081;
+        color: white;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background 0.3s ease;
+      }
+
+      .card a:hover {
+        background-color: #f50057;
+      }
+
+      .charts {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px;
+      }
+
+      .chart-container {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        width: 500px;
+        max-width: 100%;
+      }
+
+      .logout {
+        margin-top: 60px;
+        text-align: center;
+      }
+
+      .logout a {
+        background-color: #fff;
+        color: #00c9ff;
+        padding: 12px 30px;
+        font-weight: bold;
+        border-radius: 30px;
+        text-decoration: none;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+
+      .logout a:hover {
+        background-color: #00c9ff;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard">
+      <h1>Welcome Back, {{userName}}!</h1>
+      <div class="cards">
+        <div class="card">
+          <h2>Upload Notes</h2>
+          <p>Share your notes with the community.</p>
+          <a href="/upload">Go to Upload</a>
+        </div>
+        <div class="card">
+          <h2>Browse Notes</h2>
+          <p>Find helpful notes from other students.</p>
+          <a href="/browse">Browse Now</a>
+        </div>
+        <div class="card">
+          <h2>Chat with Students</h2>
+          <p>Clear doubts and collaborate in real-time.</p>
+          <a href="/chat">Open Chat</a>
+        </div>
+        <div class="card">
+          <h2>Your Profile</h2>
+          <p>View or edit your details and preferences.</p>
+          <a href="/profile">View Profile</a>
+        </div>
+      </div>
+
+      <div class="charts">
+        <div class="chart-container">
+          <canvas id="notesChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <canvas id="usersChart"></canvas>
+        </div>
+      </div>
+
+      <div class="logout">
+        <a href="/logout">Logout</a>
+      </div>
+    </div>
+
+    <script>
+      const notesChart = new Chart(document.getElementById("notesChart"), {
+        type: "bar",
+        data: {
+          labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+          datasets: [
+            {
+              label: "Notes Uploaded",
+              data: {{ notesList | tojson }},
+              backgroundColor: "#ffeb3b",
+              borderRadius: 8,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: {
+              display: true,
+              text: "Weekly Notes Upload",
+              color: "#fff",
+              font: { size: 18 },
+            },
+          },
+          scales: {
+            x: {
+              ticks: { color: "#fff" },
+              grid: { color: "rgba(255,255,255,0.2)" },
+            },
+            y: {
+              ticks: { color: "#fff" },
+              grid: { color: "rgba(255,255,255,0.2)" },
+            },
+          },
+        },
+      });
+
+      const usersChart = new Chart(document.getElementById("usersChart"), {
+        type: "doughnut",
+        data: {
+          labels: ["Active", "Inactive"],
+          datasets: [
+            {
+              label: "User Stats",
+              data: [{{ userStats.get('Active', 0) }}, {{ userStats.get('Inactive', 0) }}],
+              backgroundColor: ["#00e676", "#ff4081"],
+              borderWidth: 2,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              labels: {
+                color: "#fff",
+              },
+            },
+            title: {
+              display: true,
+              text: "User Engagement",
+              color: "#fff",
+              font: { size: 18 },
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
