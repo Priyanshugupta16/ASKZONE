@@ -138,7 +138,6 @@ def fetchUser(email):
     try:
         cursor.execute(query, value)
         result = cursor.fetchone()
-        print(result)
         name = result[1]
         branch = result[3]
         picture = result[11]

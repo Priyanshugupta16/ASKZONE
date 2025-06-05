@@ -16,7 +16,7 @@ UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 UPLOAD_FOLDER_AVATAR = 'static/uploads/avatar'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER_AVATAR
+app.config['UPLOAD_FOLDER_AVATAR'] = UPLOAD_FOLDER_AVATAR
 
 @app.route('/')
 def home():
@@ -129,7 +129,7 @@ def profile():
             filename = None
             if avatar and avatar.filename != '':
                 filename = generateUniqueFilename(avatar.filename, title=name)
-                filepath = os.path.join(app.root_path, app.config['UPLOAD_FOLDER'], filename)
+                filepath = os.path.join(app.root_path, app.config['UPLOAD_FOLDER_AVATAR'], filename)
                 avatar.save(filepath)
                 message, isUpdated = updateProfile(name=name, email=email, branch=branch, avatar=filename)
                 if isUpdated:
@@ -204,7 +204,6 @@ def logout():
 
 @socketio.on('message')
 def handle_message(data):
-    print("Broadcasting:", data)
     send(data, broadcast=True)
 
 
