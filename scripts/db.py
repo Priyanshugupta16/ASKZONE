@@ -1,4 +1,3 @@
-# Khushi run pip install mysqli-connector-python if you dont have it in your laptop
 import mysql.connector
 
 conn = mysql.connector.connect(
